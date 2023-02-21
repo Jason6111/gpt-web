@@ -3,7 +3,7 @@ import type { CSSProperties } from 'vue'
 import { computed, watch } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
-import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
+import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
@@ -56,23 +56,18 @@ watch(
     :style="getMobileClass"
     @update-collapsed="handleUpdateCollapsed"
   >
-    <div class="flex flex-col h-full" :class="[{ 'pt-14': isMobile }]">
-      <main class="flex-1 min-h-0 overflow-hidden">
+    <div class="flex flex-col h-full">
+      <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
             New chat
           </NButton>
         </div>
-        <List />
+        <div class="flex-1 min-h-0 pb-4 overflow-hidden">
+          <List />
+        </div>
       </main>
-      <footer class="flex items-center justify-between min-w-0 p-4 overflow-hidden border-t">
-        <UserAvatar />
-        <HoverButton tooltip="Setting">
-          <span class="text-xl text-[#4f555e]">
-            <SvgIcon icon="ri:settings-4-line" />
-          </span>
-        </HoverButton>
-      </footer>
+      <Footer />
     </div>
   </NLayoutSider>
   <template v-if="isMobile">
