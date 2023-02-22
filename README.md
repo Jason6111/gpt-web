@@ -52,7 +52,7 @@ API_REVERSE_PROXY=
 
 ### Node
 
-`node` 需要 `^16 || ^18` 版本（或者 `node >= 14` 需要安装 [fetch polyfill](https://github.com/developit/unfetch#usage-as-a-polyfill)），使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
+`node` 需要 `^16 || ^18` 版本（`node >= 14` 需要安装 [fetch polyfill](https://github.com/developit/unfetch#usage-as-a-polyfill)），使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
 
 ```shell
 node -v
@@ -114,7 +114,7 @@ pnpm dev
 
 ### 使用 Docker
 
-### Docker 参数示例
+#### Docker 参数示例
 
 - `OPENAI_API_KEY` 二选一
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
@@ -123,22 +123,22 @@ pnpm dev
 
 ![docker](./docs/docker.png)
 
-### Docker build & Run
+#### Docker build & Run
 
 ```bash
 docker build -t chatgpt-web .
 
 # 前台运行
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key --restart=always jason61/gpt-web:main
 
 # 后台运行
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key chatgpt-web
+docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key --restart=always jason61/gpt-web:main
 
 # 运行地址
 http://localhost:3002/
 ```
 
-### Docker compose
+#### Docker compose
 
 [Hub 地址](https://hub.docker.com/repository/docker/chenzhaoyu94/chatgpt-web/general)
 
@@ -147,7 +147,7 @@ version: '3'
 
 services:
   app:
-    image: chenzhaoyu94/chatgpt-web:main
+    image: jason61/gpt-web:main
     ports:
       - 3002:3002
     environment:
@@ -161,9 +161,24 @@ services:
       TIMEOUT_MS: 60000
 ```
 
+###  使用 Railway 部署
 
-## 手动打包
-### 后端服务
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/-5Xcgs)
+
+##### Railway 环境变量
+
+| 环境变量名称                | 必填 | 备注                    |
+| --------------------------- | ---- | ----------------------- |
+| `PORT` | 必填    | 默认 `3002`  |
+| `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
+| `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
+| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+
+> 注意: `Railway` 修改环境变量会重新 `Deploy`   
+
+### 手动打包
+#### 后端服务
 > 如果你不需要本项目的 `node` 接口，可以省略如下操作
 
 复制 `service` 文件夹到你有 `node` 服务环境的服务器上。
@@ -181,7 +196,7 @@ pnpm prod
 
 PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
-### 前端网页
+#### 前端网页
 
 1、修改根目录下 `.env` 内 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
 
@@ -193,7 +208,7 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 pnpm build
 ```
 
-### 常见问题
+## 常见问题
 Q: 为什么 `Git` 提交总是报错？
 
 A: 因为有提交信息验证，请遵循 [Commit 指南](./CONTRIBUTING.md)
