@@ -1,12 +1,9 @@
 import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { createViteProxy } from './config'
 
 export default defineConfig((env) => {
   const viteEnv = loadEnv(env.mode, process.cwd()) as unknown as ImportMetaEnv
-
-  const isOpenProxy = viteEnv.VITE_GLOB_HTTP_PROXY === 'Y'
 
   return {
     resolve: {
