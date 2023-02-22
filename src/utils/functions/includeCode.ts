@@ -1,6 +1,8 @@
 function includeCode(text: string | null | undefined) {
   const regexp = /^(?:\s{4}|\t).+/gm
-  return !!(text?.includes(' = ') || text?.match(regexp))
+  if (text?.includes(' = ') || text?.match(regexp))
+    return true
+  return false
 }
 
 export default includeCode
