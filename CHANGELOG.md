@@ -1,20 +1,70 @@
+## v2.7.1
+
+`2023-02-23`
+
+因为消息流在 `accessToken` 中存在解析失败和消息不完整等一系列的问题，调整回正常消息形式
+
+### Feature
+- 现在可以中断请求过长没有答复的消息
+- 现在可以删除单条消息
+- 设置中显示当前版本信息
+
+### BugFix
+- 回退 `2.7.0` 的消息不稳定的问题
+
+## v2.7.0
+
+`2023-02-23`
+
+### Feature
+- 使用消息流返回信息，反应更迅速
+
+### Enhancement
+- 样式的一点小改动
+
+## v2.6.2
+
+`2023-02-22`
+### BugFix
+- 还原修改代理导致的异常问题
+
 ## v2.6.1
 
- `2023-02-22`
+`2023-02-22`
 
- ### Feature
- - 新增 `Railway` 部署模版
+### Feature
+- 新增 `Railway` 部署模版
 
- ### BugFix
- - 手动打包 `Proxy` 问题
- 
+### BugFix
+- 手动打包 `Proxy` 问题
+
+## v2.6.0
+
+`2023-02-21`
+### Feature
+- 新增对 `网页 accessToken` 调用 `ChatGPT`，更智能不过不太稳定 [#51](https://github.com/Chanzhaoyu/chatgpt-web/issues/51)
+- 前端页面设置按钮显示查看当前后端服务配置
+
+### Enhancement
+- 新增 `TIMEOUT_MS` 环境变量设定后端超时时常（单位：毫秒）[#62](https://github.com/Chanzhaoyu/chatgpt-web/issues/62)
+
+## v2.5.2
+
+`2023-02-21`
+### Feature
+- 增加对 `markdown` 格式的支持 [Demo](https://github.com/Chanzhaoyu/chatgpt-web/pull/77)
+### BugFix
+- 重载会话时滚动条保持
+
 ## v2.5.1
 
- `2023-02-21`
- ### Enhancement
- - 调整路由模式为 `hash`
- - 调整新增会话添加到列表最前
- - 调整移动端样式
+`2023-02-21`
+
+### Enhancement
+- 调整路由模式为 `hash`
+- 调整新增会话添加到
+- 调整移动端样式
+
 
 ## v2.5.0
 

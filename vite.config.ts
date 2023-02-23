@@ -18,11 +18,11 @@ export default defineConfig((env) => {
       open: false,
       proxy: {
         '/api': {
-        target: viteEnv.VITE_APP_API_BASE_URL,
-        changeOrigin: true, // 允许跨域
-        rewrite: path => path.replace('/api/', '/'),
+          target: viteEnv.VITE_APP_API_BASE_URL,
+          changeOrigin: true, // 允许跨域
+          rewrite: path => path.replace('/api/', '/'),
+        },
       },
-     },
     },
     build: {
       reportCompressedSize: false,

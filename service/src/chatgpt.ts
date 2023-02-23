@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
 import 'isomorphic-fetch'
-import type { ChatGPTAPI, SendMessageOptions } from 'chatgpt'
+import type { ChatGPTAPI, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTUnofficialProxyAPI } from 'chatgpt'
 import { sendResponse } from './utils'
 
@@ -8,7 +8,7 @@ dotenv.config()
 
 let apiModel: 'ChatGPTAPI' | 'ChatGPTUnofficialProxyAPI' | undefined
 
-export interface ChatContext {
+interface ChatContext {
   conversationId?: string
   parentMessageId?: string
 }
@@ -65,6 +65,35 @@ async function chatReply(
   }
 }
 
+/**  实验性质的函数，用于处理聊天过程中的中间结果 */
+async function chatReplyProcess(
+  message: string,
+  lastContext?: { conversationId?: string; parentMessageId?: string },
+  process?: (chat: ChatMessage) => void,
+) {
+  if (!message)
+    return sendResponse({ type: 'Fail', message: 'Message is empty' })
+
+  try {
+    let options: SendMessageOptions = { timeoutMs }
+
+    if (lastContext)
+      options = { ...lastContext }
+
+    const response = await api.sendMessage(message, {
+      ...options,
+      onProgress: (partialResponse) => {
+        process?.(partialResponse)
+      },
+    })
+
+    return sendResponse({ type: 'Success', data: response })
+  }
+  catch (error: any) {
+    return sendResponse({ type: 'Fail', message: error.message })
+  }
+}
+
 async function chatConfig() {
   return sendResponse({
     type: 'Success',
@@ -76,4 +105,6 @@ async function chatConfig() {
   })
 }
 
-export { chatReply, chatConfig }
+export type { ChatContext, ChatMessage }
+
+export { chatReply, chatReplyProcess, chatConfig }
