@@ -119,6 +119,7 @@ pnpm dev
 - `OPENAI_API_KEY` 二选一
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
+- `API_SOCKS_PROXY` 可选，设置 `SOCKS_PROXY_HOST`，`SOCKS_PROXY_PORT`
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 
 ![docker](./docs/docker.png)
