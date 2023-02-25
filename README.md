@@ -35,6 +35,13 @@
 API_REVERSE_PROXY=
 ```
 
+SOCKS代理：
+```shell
+# service/.env
+SOCKS_PROXY_HOST=
+SOCKS_PROXY_PORT=
+```
+
 ## 待实现路线
 [✓] 双模型
 
@@ -126,18 +133,24 @@ pnpm dev
 
 #### Docker build & Run
 
-```bash
-docker build -t chatgpt-web .
-
 # 前台运行
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key --restart=always jason61/gpt-web:main
+
+```
+
+docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY= --env OPENAI_ACCESS_TOKEN= --env API_REVERSE_PROXY= --env SOCKS_PROXY_HOST= --env SOCKS_PROXY_PORT= --env TIMEOUT_MS=60000 --restart=always jason61/gpt-web:main
+
+```
 
 # 后台运行
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key --restart=always jason61/gpt-web:main
+
+```
+docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY= --env OPENAI_ACCESS_TOKEN= --env API_REVERSE_PROXY= --env SOCKS_PROXY_HOST= --env SOCKS_PROXY_PORT= --env TIMEOUT_MS=60000 --restart=always jason61/gpt-web:main
+
+```
 
 # 运行地址
 http://localhost:3002/
-```
+
 
 #### Docker compose
 
@@ -158,6 +171,11 @@ services:
       OPENAI_ACCESS_TOKEN: xxxxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
+      # SOCKS反向代理，可选
+      # SOCKS反向代理IP
+      SOCKS_PROXY_HOST: xxx
+      # SOCKS反向代理端口
+      SOCKS_PROXY_PORT: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
 ```
@@ -175,6 +193,7 @@ services:
 | `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
 | `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+| `API_SOCKS_PROXY` | 可选，`Web API` 时可用    | `Web API` SOCKS代理地址    |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`   
 
