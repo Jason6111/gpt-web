@@ -186,6 +186,7 @@ services:
 | `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
 | `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
+| `API_SOCKS_PROXY` | 可选，`Web API` 时可用    | `Web API` SOCKS代理地址    |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`   
 
