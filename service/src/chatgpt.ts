@@ -35,7 +35,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     const options = {
       debug: true,
     }
-    
+
     if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
       const agent = new SocksProxyAgent({
         hostname: process.env.SOCKS_PROXY_HOST,
