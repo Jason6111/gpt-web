@@ -126,18 +126,24 @@ pnpm dev
 
 #### Docker build & Run
 
-```bash
-docker build -t chatgpt-web .
-
 # 前台运行
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY=your_api_key --restart=always jason61/gpt-web:main
+
+```
+
+docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY= --env OPENAI_ACCESS_TOKEN= --env API_REVERSE_PROXY= --env SOCKS_PROXY_HOST= --env SOCKS_PROXY_PORT= --env TIMEOUT_MS=60000 --restart=always jason61/gpt-web:main
+
+```
 
 # 后台运行
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY=your_api_key --restart=always jason61/gpt-web:main
+
+```
+docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY= --env OPENAI_ACCESS_TOKEN= --env API_REVERSE_PROXY= --env SOCKS_PROXY_HOST= --env SOCKS_PROXY_PORT= --env TIMEOUT_MS=60000 --restart=always jason61/gpt-web:main
+
+```
 
 # 运行地址
 http://localhost:3002/
-```
+
 
 #### Docker compose
 
@@ -158,6 +164,11 @@ services:
       OPENAI_ACCESS_TOKEN: xxxxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
+      # SOCKS反向代理，可选
+      # SOCKS反向代理IP
+      SOCKS_PROXY_HOST: xxx
+      # SOCKS反向代理端口
+      SOCKS_PROXY_PORT: xxx
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
 ```
