@@ -35,6 +35,13 @@
 API_REVERSE_PROXY=
 ```
 
+SOCKS代理：
+```shell
+# service/.env
+SOCKS_PROXY_HOST=
+SOCKS_PROXY_PORT=
+```
+
 ## 待实现路线
 [✓] 双模型
 
