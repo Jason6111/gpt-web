@@ -12,7 +12,6 @@
 |  方式   | 免费？  | 可靠性  | 质量 |
 |  ----  | ----  | ----  | ----  |
 | `ChatGPTAPI(GPT-3)`  | 否 | 	可靠 | 较笨 |
-
 | `ChatGPTUnofficialProxyAPI(网页 accessToken)`  | 	是 |  相对不可靠 | 聪明 |
 
 对比：
