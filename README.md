@@ -2,8 +2,8 @@
 
 使用 `express` 和 `vue3` 搭建的支持 `ChatGPT` 双模型演示网页
 
-![cover](./docs/c1.png)
-![cover2](./docs/c2.png)
+![cover](./docs/c1-2.8.0.png)
+![cover2](./docs/c2-2.8.0.png)
 
 ## 介绍
 
