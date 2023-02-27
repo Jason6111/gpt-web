@@ -144,7 +144,7 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=60000 \
-           jason61/gpt-web:main
+           jason61/gpt-web:latest
 ```
 
 # 新手选这个后台运行
@@ -160,7 +160,7 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=60000 \
            --restart=always \
-           jason61/gpt-web:main
+           jason61/gpt-web:latest
 ```
 
 # 运行地址
@@ -176,7 +176,7 @@ version: '3'
 
 services:
   app:
-    image: jason61/gpt-web:main
+    image: jason61/gpt-web:latest
     ports:
       - 3002:3002
     environment:
