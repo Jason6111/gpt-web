@@ -134,13 +134,33 @@ pnpm dev
 # 前台运行
 
 ```
-docker run --name chatgpt-web --rm -it -p 3002:3002 --env OPENAI_API_KEY= --env OPENAI_ACCESS_TOKEN= --env API_REVERSE_PROXY= --env SOCKS_PROXY_HOST= --env SOCKS_PROXY_PORT= --env TIMEOUT_MS=60000 jason61/gpt-web:main
+docker run --name chatgpt-web \
+           --rm \
+           -it \
+           -p 3002:3002 \
+           -e OPENAI_API_KEY= \
+           -e OPENAI_ACCESS_TOKEN= \
+           -e API_REVERSE_PROXY= \
+           -e SOCKS_PROXY_HOST= \
+           -e SOCKS_PROXY_PORT= \
+           -e TIMEOUT_MS=60000 \
+           jason61/gpt-web:main
 ```
 
 # 新手选这个后台运行
 
 ```
-docker run --name chatgpt-web -d -p 3002:3002 --env OPENAI_API_KEY= --env OPENAI_ACCESS_TOKEN= --env API_REVERSE_PROXY= --env SOCKS_PROXY_HOST= --env SOCKS_PROXY_PORT= --env TIMEOUT_MS=60000 --restart always jason61/gpt-web:main
+docker run --name chatgpt-web \
+           -d \
+           -p 3002:3002 \
+           -e OPENAI_API_KEY= \
+           -e OPENAI_ACCESS_TOKEN= \
+           -e API_REVERSE_PROXY= \
+           -e SOCKS_PROXY_HOST= \
+           -e SOCKS_PROXY_PORT= \
+           -e TIMEOUT_MS=60000 \
+           --restart=always \
+           jason61/gpt-web:main
 ```
 
 # 运行地址
