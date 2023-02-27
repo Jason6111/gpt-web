@@ -6,6 +6,9 @@ on:
   release:
     types: [created] # 表示在创建新的 Release 时触发
 
+env:
+  GITHUB_REF_NAME: ${{ github.ref }}
+  
 jobs:
   build_docker:
     name: Build docker
