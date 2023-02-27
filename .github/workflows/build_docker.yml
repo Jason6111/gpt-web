@@ -3,6 +3,8 @@ name: build_docker
 on:
   push:
     branches: [main]
+  release:
+    types: [created] # 表示在创建新的 Release 时触发
 
 jobs:
   build_docker:
@@ -17,10 +19,6 @@ jobs:
         with:
           images: jason61/gpt-web
 
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=today::$(date +'%Y-%m-%d_%H-%M')"
-        
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -39,5 +37,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           tags: |
-            jason61/gpt-web:${{ steps.date.outputs.today }}
-            jason61/gpt-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/gpt-web:"${GITHUB_REF_NAME}"
+            ${{ secrets.DOCKERHUB_USERNAME }}/gpt-web:latest
