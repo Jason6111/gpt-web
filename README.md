@@ -143,7 +143,7 @@ docker run --name chatgpt-web \
            -e API_REVERSE_PROXY= \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
-           -e TIMEOUT_MS=60000 \
+           -e TIMEOUT_MS=100000 \
            jason61/gpt-web:latest
 ```
 
@@ -158,7 +158,7 @@ docker run --name chatgpt-web \
            -e API_REVERSE_PROXY= \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
-           -e TIMEOUT_MS=60000 \
+           -e TIMEOUT_MS=100000 \
            --restart=always \
            jason61/gpt-web:latest
 ```
@@ -192,7 +192,7 @@ services:
       # SOCKS反向代理端口
       SOCKS_PROXY_PORT: xxx
       # 超时，单位毫秒，可选
-      TIMEOUT_MS: 60000
+      TIMEOUT_MS: 100000
 ```
 
 ###  使用 Railway 部署
