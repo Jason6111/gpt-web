@@ -47,9 +47,9 @@ SOCKS_PROXY_PORT=
 
 [✓] 对代码等消息类型的格式化美化处理
 
-[✗] 界面多语言
+[✓] 界面多语言
 
-[✗] 界面主题
+[✓] 界面主题
 
 [✗] More...
 
@@ -176,7 +176,7 @@ version: '3'
 
 services:
   app:
-    image: jason61/gpt-web:latest
+    image: jason61/gpt-web:latest # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
       - 3002:3002
     environment:
