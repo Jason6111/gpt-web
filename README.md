@@ -24,6 +24,12 @@
 3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
 4. 同时存在时以 `OpenAI API Key` 优先
 
+登陆加密：
+```shell
+# 自定义登陆页面密码
+AUTH_SECRET_KEY=
+```
+
 反向代理：
 
 `ChatGPTUnofficialProxyAPI`时可用 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
