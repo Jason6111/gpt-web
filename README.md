@@ -129,9 +129,9 @@ pnpm dev
 
 - `OPENAI_API_KEY` 二选一
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
+- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
 - `API_SOCKS_PROXY` 可选，设置 `SOCKS_PROXY_HOST`，`SOCKS_PROXY_PORT`
-- `AUTH_SECRET_KEY` 访问权限密钥，可选
 - `TIMEOUT_MS` 超时，单位毫秒，可选
 
 ![docker](./docs/docker.png)
@@ -147,7 +147,7 @@ docker run --name chatgpt-web \
            -p 3002:3002 \
            -e OPENAI_API_KEY= \
            -e OPENAI_ACCESS_TOKEN= \
-           -e AUTH_SECRET_KEY= \
+           -e OPENAI_API_BASE_URL= \
            -e API_REVERSE_PROXY= \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
@@ -163,7 +163,7 @@ docker run --name chatgpt-web \
            -p 3002:3002 \
            -e OPENAI_API_KEY= \
            -e OPENAI_ACCESS_TOKEN= \
-           -e AUTH_SECRET_KEY= \
+           -e OPENAI_API_BASE_URL= \
            -e API_REVERSE_PROXY= \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
@@ -193,8 +193,8 @@ services:
       OPENAI_API_KEY: xxxxxx
       # 二选一
       OPENAI_ACCESS_TOKEN: xxxxxx
-      # 访问权限密钥，可选
-      AUTH_SECRET_KEY: xxxx
+      # API接口地址，可选，设置 OPENAI_API_KEY 时可用
+      OPENAI_API_BASE_URL: xxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
       # SOCKS反向代理，可选
@@ -205,7 +205,7 @@ services:
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 100000
 ```
-
+- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 ###  使用 Railway 部署
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/-5Xcgs)
@@ -218,9 +218,9 @@ services:
 | `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
 | `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
 | `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
 | `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
 | `API_SOCKS_PROXY` | 可选，`Web API` 时可用    | `Web API` SOCKS代理地址    |
-| `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                                                               |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`   
 
