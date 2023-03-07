@@ -1,18 +1,13 @@
 # ChatGPT Web
 
-使用 `express` 和 `vue3` 搭建的支持 `ChatGPT` 双模型演示网页
-
-![cover](./docs/c1-2.8.0.png)
-![cover2](./docs/c2-2.8.0.png)
-
 ## 介绍
 
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
-|  方式   | 免费？  | 可靠性  | 质量 |
-|  ----  | ----  | ----  | ----  |
-| `ChatGPTAPI(GPT-3.5)`  | 否 | 	可靠 | 较笨 |
-| `ChatGPTUnofficialProxyAPI(网页 accessToken)`  | 	是 |  相对不可靠 | 聪明 |
+| 方式                                          | 免费？ | 可靠性     | 质量 |
+| --------------------------------------------- | ------ | ---------- | ---- |
+| `ChatGPTAPI(gpt-3.5-turbo-0301)`                           | 否     | 可靠       | 相对较笨 |
+| `ChatGPTUnofficialProxyAPI(网页 accessToken)` | 是     | 相对不可靠 | 聪明 |
 
 对比：
 1. `ChatGPTAPI` 使用 `gpt-3.5-turbo-0301` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
@@ -26,18 +21,19 @@
 
 反向代理：
 
-`ChatGPTUnofficialProxyAPI`时可用 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
+`ChatGPTUnofficialProxyAPI`时可用，[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
 
 ```shell
 # service/.env
 API_REVERSE_PROXY=
 ```
 
-SOCKS代理：
-```shell
-# service/.env
-SOCKS_PROXY_HOST=
-SOCKS_PROXY_PORT=
+环境变量：
+
+全部参数变量请查看或[这里](#docker-参数示例)
+
+```
+/service/.env
 ```
 
 ## 待实现路线
@@ -86,7 +82,7 @@ OPENAI_ACCESS_TOKEN=
 
 > 为了简便 `后端开发人员` 的了解负担，所以并没有采用前端 `workspace` 模式，而是分文件夹存放。如果只需要前端页面做二次开发，删除 `service` 文件夹即可。
 
-### 后端服务
+### 后端
 
 进入文件夹 `/service` 运行以下命令
 
@@ -94,7 +90,7 @@ OPENAI_ACCESS_TOKEN=
 pnpm install
 ```
 
-### 网页
+### 前端
 根目录下运行以下命令
 ```shell
 pnpm bootstrap
@@ -125,15 +121,16 @@ pnpm dev
 - `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
-- `API_SOCKS_PROXY` 可选，设置 `SOCKS_PROXY_HOST`，`SOCKS_PROXY_PORT`
+- `AUTH_SECRET_KEY` 访问权限密钥，可选
 - `TIMEOUT_MS` 超时，单位毫秒，可选
+- `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
+- `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
 
 ![docker](./docs/docker.png)
 
 #### Docker build & Run
 
 # 前台运行
-
 ```
 docker run --name chatgpt-web \
            --rm \
@@ -141,12 +138,13 @@ docker run --name chatgpt-web \
            -p 3002:3002 \
            -e OPENAI_API_KEY= \
            -e OPENAI_ACCESS_TOKEN= \
+           -e AUTH_SECRET_KEY= \
            -e OPENAI_API_BASE_URL= \
            -e API_REVERSE_PROXY= \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
-           jason61/gpt-web:latest
+           jason61/gptweb-beta:latest
 ```
 
 # 新手选这个后台运行
@@ -157,18 +155,20 @@ docker run --name chatgpt-web \
            -p 3002:3002 \
            -e OPENAI_API_KEY= \
            -e OPENAI_ACCESS_TOKEN= \
+					 -e AUTH_SECRET_KEY= \
            -e OPENAI_API_BASE_URL= \
            -e API_REVERSE_PROXY= \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
            --restart=always \
-           jason61/gpt-web:latest
+           jason61/gptweb-beta:latest
 ```
 
 # 运行地址
+```
 http://localhost:3002/
-
+```
 
 #### Docker compose
 
@@ -179,7 +179,7 @@ version: '3'
 
 services:
   app:
-    image: jason61/gpt-web:latest # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
+    image: jason61/gptweb-beta # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
       - 3002:3002
     environment:
@@ -191,32 +191,35 @@ services:
       OPENAI_API_BASE_URL: xxxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
-      # SOCKS反向代理，可选
-      # SOCKS反向代理IP
-      SOCKS_PROXY_HOST: xxx
-      # SOCKS反向代理端口
-      SOCKS_PROXY_PORT: xxx
+      # 访问权限密钥，可选
+      AUTH_SECRET_KEY: xxx
       # 超时，单位毫秒，可选
-      TIMEOUT_MS: 100000
+      TIMEOUT_MS: 60000
+      # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
+      SOCKS_PROXY_HOST: xxxx
+      # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
+      SOCKS_PROXY_PORT: xxxx
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 ###  使用 Railway 部署
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/-5Xcgs)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/-5Xcgs
 
-##### Railway 环境变量
+#### Railway 环境变量
 
-| 环境变量名称                | 必填 | 备注                    |
-| --------------------------- | ---- | ----------------------- |
-| `PORT` | 必填    | 默认 `3002`  |
-| `TIMEOUT_MS` | 可选    | 超时时间，单位毫秒，   |
-| `OPENAI_API_KEY` | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)   |
-| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一   | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session)   |
+| 环境变量名称          | 必填                   | 备注                                                                                               |
+| --------------------- | ---------------------- | -------------------------------------------------------------------------------------------------- |
+| `PORT`                | 必填                   | 默认 `3002`
+| `AUTH_SECRET_KEY`          | 可选                   | 访问权限密钥                                        |
+| `TIMEOUT_MS`          | 可选                   | 超时时间，单位毫秒                                                                             |
+| `OPENAI_API_KEY`      | `OpenAI API` 二选一    | 使用 `OpenAI API` 所需的 `apiKey` [(获取 apiKey)](https://platform.openai.com/overview)            |
+| `OPENAI_ACCESS_TOKEN` | `Web API` 二选一       | 使用 `Web API` 所需的 `accessToken` [(获取 accessToken)](https://chat.openai.com/api/auth/session) |
 | `OPENAI_API_BASE_URL`   | 可选，`OpenAI API` 时可用 |  `API`接口地址  |
-| `API_REVERSE_PROXY` | 可选，`Web API` 时可用    | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)   |
-| `API_SOCKS_PROXY` | 可选，`Web API` 时可用    | `Web API` SOCKS代理地址    |
+| `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
+| `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
+| `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
 
-> 注意: `Railway` 修改环境变量会重新 `Deploy`   
+> 注意: `Railway` 修改环境变量会重新 `Deploy`
 
 ### 手动打包
 #### 后端服务
