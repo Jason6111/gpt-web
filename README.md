@@ -1,7 +1,7 @@
 # ChatGPT Web
 
 ## 介绍
-
+##这两天开始，官方已经开始对第三方代理进行了拉闸， `accessToken` 即将或已经开始可能会不可使用。异常 `API` 使用也开始封号，封号缘由不明，如果出现使用 `API` 提示错误，请查看后端控制台信息，或留意邮箱。
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
@@ -14,7 +14,7 @@
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
 
 切换方式：
-1. 进入 `service/.env` 文件
+1. 进入 `service/.env.example` 文件，复制内容到 `service/.env`` 文件
 2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
 3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
 4. 同时存在时以 `OpenAI API Key` 优先
@@ -110,7 +110,7 @@ pnpm start
 ```shell
 pnpm dev
 ```
-
+参考根目录下 `.env.example` 文件内容创建 `.env` 文件，修改 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
 ## 打包
 
 ### 使用 Docker
@@ -144,7 +144,7 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
-           jason61/gptweb-beta:latest
+           jason61/gpt-web:latest
 ```
 
 # 新手选这个后台运行
@@ -162,7 +162,7 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
            --restart=always \
-           jason61/gptweb-beta:latest
+           jason61/gpt-web:latest
 ```
 
 # 运行地址
@@ -179,7 +179,7 @@ version: '3'
 
 services:
   app:
-    image: jason61/gptweb-beta # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
+    image: jason61/gpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
       - 3002:3002
     environment:
