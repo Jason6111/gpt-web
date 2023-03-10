@@ -30,7 +30,7 @@ useCopyCode()
 
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom } = useScroll()
+const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
@@ -40,6 +40,8 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 
 const prompt = ref<string>('')
 const loading = ref<boolean>(false)
+const usingContext = ref<boolean>(true)
+const actionVisible = ref<boolean>(true)
 
 // 添加PromptStore
 const promptStore = usePromptStore()
@@ -135,13 +137,14 @@ async function onConversation() {
               return fetchChatAPIOnce()
             }
 
-            scrollToBottom()
+            scrollToBottomIfAtBottom()
           }
           catch (error) {
           //
           }
         },
       })
+            scrollToBottomIfAtBottom()
     }
 
     await fetchChatAPIOnce()
