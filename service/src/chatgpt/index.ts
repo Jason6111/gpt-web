@@ -2,8 +2,8 @@ import * as dotenv from 'dotenv'
 import 'isomorphic-fetch'
 import type { ChatGPTAPIOptions, ChatMessage, SendMessageOptions } from 'chatgpt'
 import { ChatGPTAPI, ChatGPTUnofficialProxyAPI } from 'chatgpt'
-import type { HttpsProxyAgent } from 'https-proxy-agent'
-import proxy from 'https-proxy-agent'
+import { SocksProxyAgent } from 'socks-proxy-agent'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 import fetch from 'node-fetch'
 import { sendResponse } from '../utils'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
@@ -27,9 +27,6 @@ if (!process.env.OPENAI_API_KEY && !process.env.OPENAI_ACCESS_TOKEN)
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
-let agent: HttpsProxyAgent | undefined
-if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
-  agent = proxy(`http://${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`);
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
@@ -49,7 +46,19 @@ if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
     if (process.env.OPENAI_API_BASE_URL && process.env.OPENAI_API_BASE_URL.trim().length > 0)
       options.apiBaseUrl = process.env.OPENAI_API_BASE_URL
 
-    if (agent) {
+    if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
+      const agent = new SocksProxyAgent({
+        hostname: process.env.SOCKS_PROXY_HOST,
+        port: process.env.SOCKS_PROXY_PORT,
+      })
+      options.fetch = (url, options) => {
+        return fetch(url, { agent, ...options })
+      }
+    }
+
+    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+    if (httpsProxy) {
+      const agent = new HttpsProxyAgent(httpsProxy)
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
@@ -64,7 +73,19 @@ if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
       debug: false,
     }
 
-    if (agent) {
+    if (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) {
+      const agent = new SocksProxyAgent({
+        hostname: process.env.SOCKS_PROXY_HOST,
+        port: process.env.SOCKS_PROXY_PORT,
+      })
+      options.fetch = (url, options) => {
+        return fetch(url, { agent, ...options })
+      }
+    }
+
+    const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+    if (httpsProxy) {
+      const agent = new HttpsProxyAgent(httpsProxy)
       options.fetch = (url, options) => {
         return fetch(url, { agent, ...options })
       }
@@ -115,6 +136,8 @@ async function chatReplyProcess(
 }
 
 async function chatConfig() {
+  const httpsProxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.ALL_PROXY || process.env.all_proxy
+
   return sendResponse({
     type: 'Success',
     data: {
@@ -122,6 +145,7 @@ async function chatConfig() {
       reverseProxy: process.env.API_REVERSE_PROXY,
       timeoutMs,
       socksProxy: (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT) ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`) : '-',
+      httpsProxy,
     } as ModelConfig,
   })
 }

@@ -1,7 +1,7 @@
 # ChatGPT Web
 
 ## 介绍
-##这两天开始，官方已经开始对第三方代理进行了拉闸， `accessToken` 即将或已经开始可能会不可使用。异常 `API` 使用也开始封号，封号缘由不明，如果出现使用 `API` 提示错误，请查看后端控制台信息，或留意邮箱。
+
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
@@ -145,7 +145,7 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
-           jason61/gpt-web:latest
+           jason61/gptweb-beta:latest
 ```
 
 # 新手选这个后台运行
@@ -163,7 +163,7 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
            --restart=always \
-           jason61/gpt-web:latest
+           jason61/gptweb-beta:latest
 ```
 
 # 运行地址
@@ -180,7 +180,7 @@ version: '3'
 
 services:
   app:
-    image: jason61/gpt-web # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
+    image: jason61/gptweb-beta # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
       - 3002:3002
     environment:

@@ -30,7 +30,7 @@ useCopyCode()
 
 const { isMobile } = useBasicLayout()
 const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
-const { scrollRef, scrollToBottom, scrollToBottomIfAtBottom } = useScroll()
+const { scrollRef, scrollToBottom } = useScroll()
 const { usingContext, toggleUsingContext } = useUsingContext()
 
 const { uuid } = route.params as { uuid: string }
@@ -135,14 +135,13 @@ async function onConversation() {
               return fetchChatAPIOnce()
             }
 
-            scrollToBottomIfAtBottom()
+            scrollToBottom()
           }
           catch (error) {
           //
           }
         },
       })
-            scrollToBottomIfAtBottom()
     }
 
     await fetchChatAPIOnce()
@@ -525,8 +524,14 @@ onUnmounted(() => {
           <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
             <template #default="{ handleInput, handleBlur, handleFocus }">
               <NInput
-                v-model:value="prompt" type="textarea" :placeholder="placeholder"
-                :autosize="{ minRows: 1, maxRows: 2 }" @input="handleInput" @focus="handleFocus" @blur="handleBlur" @keypress="handleEnter"
+                v-model:value="prompt"
+                type="textarea"
+                :placeholder="placeholder"
+                :autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
+                @input="handleInput"
+                @focus="handleFocus"
+                @blur="handleBlur"
+                @keypress="handleEnter"
               />
             </template>
           </NAutoComplete>
