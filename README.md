@@ -1,7 +1,8 @@
 # ChatGPT Web
 
 ## 介绍
-
+![cover](./docs/c1.png)
+![cover2](./docs/c2.png)
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
@@ -14,19 +15,10 @@
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
 
 切换方式：
-1. 进入 `service/.env.example` 文件，复制内容到 `service/.env`` 文件
+1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
 2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
 3. 使用 `Web API` 请填写 `OPENAI_ACCESS_TOKEN` 字段 [(获取 accessToken)](https://chat.openai.com/api/auth/session)
 4. 同时存在时以 `OpenAI API Key` 优先
-
-反向代理：
-
-`ChatGPTUnofficialProxyAPI`时可用，[详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)
-
-```shell
-# service/.env
-API_REVERSE_PROXY=
-```
 
 环境变量：
 
@@ -43,6 +35,12 @@ API_REVERSE_PROXY=
 
 [✓] 对代码等消息类型的格式化美化处理
 
+[✓] 访问权限控制
+
+[✓] 数据导入、导出
+
+[✓] 保存消息到本地图片
+
 [✓] 界面多语言
 
 [✓] 界面主题
@@ -53,7 +51,7 @@ API_REVERSE_PROXY=
 
 ### Node
 
-`node` 需要 `^16 || ^18` 版本（`node >= 14` 需要安装 [fetch polyfill](https://github.com/developit/unfetch#usage-as-a-polyfill)），使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
+`node` 需要 `^16 || ^18 || ^19` 版本（`node >= 14` 需要安装 [fetch polyfill](https://github.com/developit/unfetch#usage-as-a-polyfill)），使用 [nvm](https://github.com/nvm-sh/nvm) 可管理本地多个 `node` 版本
 
 ```shell
 node -v
@@ -116,18 +114,14 @@ pnpm dev
 ### 使用 Docker
 
 #### Docker 参数示例
+通用：
 
-- `OPENAI_API_KEY` 二选一
-- `OPENAI_ACCESS_TOKEN`  二选一，同时存在时，`OPENAI_API_KEY` 优先
-- `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
-- `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
-- `API_REVERSE_PROXY` 可选，设置 `OPENAI_ACCESS_TOKEN` 时可用 [参考](#介绍)
 - `AUTH_SECRET_KEY` 访问权限密钥，可选
 - `TIMEOUT_MS` 超时，单位毫秒，可选
-- `SOCKS_PROXY_HOST` 可选，和 SOCKS_PROXY_PORT 一起时生效
-- `SOCKS_PROXY_PORT` 可选，和 SOCKS_PROXY_HOST 一起时生效
-
-![docker](./docs/docker.png)
+- `SOCKS_PROXY_HOST` 和 `SOCKS_PROXY_PORT` 一起时生效，可选
+- `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
+- `HTTPS_PROXY` 支持 `http`，`https`, `socks5`，可选
+- `ALL_PROXY` 支持 `http`，`https`, `socks5`，可选
 
 #### Docker build & Run
 
@@ -145,6 +139,8 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
+           -e HTTPS_PROXY= \
+           -e ALL_PROXY= \
            jason61/gptweb-beta:latest
 ```
 
@@ -162,6 +158,8 @@ docker run --name chatgpt-web \
            -e SOCKS_PROXY_HOST= \
            -e SOCKS_PROXY_PORT= \
            -e TIMEOUT_MS=100000 \
+           -e HTTPS_PROXY= \
+           -e ALL_PROXY= \
            --restart=always \
            jason61/gptweb-beta:latest
 ```
@@ -202,6 +200,10 @@ services:
       SOCKS_PROXY_HOST: xxxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
       SOCKS_PROXY_PORT: xxxx
+      # HTTPS 代理，可选，支持 http，https，socks5
+      HTTPS_PROXY: xxxx
+      # 全部 代理，可选，支持 http，https，socks5
+      ALL_PROXY: xxxx
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
@@ -223,6 +225,8 @@ services:
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
 | `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
 | `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
+| `HTTPS_PROXY`   | 可选 | HTTPS 代理，支持 http，https, socks5    |
+| `ALL_PROXY`   | 可选 | 所有代理 代理，支持 http，https, socks5    |
 
 > 注意: `Railway` 修改环境变量会重新 `Deploy`
 
