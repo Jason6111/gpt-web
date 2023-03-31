@@ -1,8 +1,10 @@
 # ChatGPT Web
 
 ## 介绍
+
 ![cover](./docs/c1.png)
 ![cover2](./docs/c2.png)
+
 支持双模型，提供了两种非官方 `ChatGPT API` 方法
 
 | 方式                                          | 免费？ | 可靠性     | 质量 |
@@ -14,6 +16,13 @@
 1. `ChatGPTAPI` 使用 `gpt-3.5-turbo-0301` 通过官方`OpenAI`补全`API`模拟`ChatGPT`（最稳健的方法，但它不是免费的，并且没有使用针对聊天进行微调的模型）
 2. `ChatGPTUnofficialProxyAPI` 使用非官方代理服务器访问 `ChatGPT` 的后端`API`，绕过`Cloudflare`（使用真实的的`ChatGPT`，非常轻量级，但依赖于第三方服务器，并且有速率限制）
 
+警告：
+1. 你应该首先使用 `API` 方式
+2. 使用 `API` 时，如果网络不通，那是国内被墙了，你需要自建代理，绝对不要使用别人的公开代理，那是危险的。
+3. 使用 `accessToken` 方式时反向代理将向第三方暴露您的访问令牌，这样做应该不会产生任何不良影响，但在使用这种方法之前请考虑风险。
+4. 使用 `accessToken` 时，不管你是国内还是国外的机器，都会使用代理。默认代理为 [acheong08](https://github.com/acheong08) 大佬的 `https://bypass.churchless.tech/api/conversation`，这不是后门也不是监听，除非你有能力自己翻过 `CF` 验证，用前请知悉。[社区代理](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)（注意：只有这两个是推荐，其他第三方来源，请自行甄别）
+5. 把项目发布到公共网络时，你应该设置 `AUTH_SECRET_KEY` 变量添加你的密码访问权限，你也应该修改 `index.html` 中的 `title`，防止被关键词搜索到。
+
 切换方式：
 1. 进入 `service/.env.example` 文件，复制内容到 `service/.env` 文件
 2. 使用 `OpenAI API Key` 请填写 `OPENAI_API_KEY` 字段 [(获取 apiKey)](https://platform.openai.com/overview)
@@ -22,10 +31,10 @@
 
 环境变量：
 
-全部参数变量请查看或[这里](#docker-参数示例)
+全部参数变量请查看或[这里](#环境变量)
 
 ```
-/service/.env
+/service/.env.example
 ```
 
 ## 待实现路线
@@ -108,12 +117,21 @@ pnpm start
 ```shell
 pnpm dev
 ```
-参考根目录下 `.env.example` 文件内容创建 `.env` 文件，修改 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
-## 打包
 
-### 使用 Docker
+## 环境变量
 
-#### Docker 参数示例
+`API` 可用：
+
+- `OPENAI_API_KEY` 和 `OPENAI_ACCESS_TOKEN` 二选一
+- `OPENAI_API_MODEL`  设置模型，可选，默认：`gpt-3.5-turbo`
+- `OPENAI_API_BASE_URL` 设置接口地址，可选，默认：`https://api.openai.com`
+- `OPENAI_API_DISABLE_DEBUG` 设置接口关闭 debug 日志，可选，默认：empty 不关闭
+
+`ACCESS_TOKEN` 可用：
+
+- `OPENAI_ACCESS_TOKEN`  和 `OPENAI_API_KEY` 二选一，同时存在时，`OPENAI_API_KEY` 优先
+- `API_REVERSE_PROXY` 设置反向代理，可选，默认：`https://bypass.churchless.tech/api/conversation`，[社区](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)（注意：只有这两个是推荐，其他第三方来源，请自行甄别）
+
 通用：
 
 - `AUTH_SECRET_KEY` 访问权限密钥，可选
@@ -123,6 +141,14 @@ pnpm dev
 - `SOCKS_PROXY_PORT` 和 `SOCKS_PROXY_HOST` 一起时生效，可选
 - `HTTPS_PROXY` 支持 `http`，`https`, `socks5`，可选
 - `ALL_PROXY` 支持 `http`，`https`, `socks5`，可选
+
+## 打包
+
+### 使用 Docker
+
+#### Docker 参数示例
+
+![docker](./docs/docker.png)
 
 #### Docker build & Run
 
@@ -146,7 +172,6 @@ docker run --name chatgpt-web \
 ```
 
 # 新手选这个后台运行
-
 ```
 docker run --name chatgpt-web \
            -d \
@@ -181,17 +206,17 @@ services:
   app:
     image: jason61/gptweb-beta # 总是使用 latest ,更新时重新 pull 该 tag 镜像即可
     ports:
-      - 3002:3002
+      - 127.0.0.1:3002:3002
     environment:
       # 二选一
-      OPENAI_API_KEY: xxxxxx
+      OPENAI_API_KEY: sk-xxx
       # 二选一
-      OPENAI_ACCESS_TOKEN: xxxxxx
+      OPENAI_ACCESS_TOKEN: xxx
       # API接口地址，可选，设置 OPENAI_API_KEY 时可用
-      OPENAI_API_BASE_URL: xxxx
+      OPENAI_API_BASE_URL: xxx
       # API模型，可选，设置 OPENAI_API_KEY 时可用，https://platform.openai.com/docs/models
       # gpt-4, gpt-4-0314, gpt-4-32k, gpt-4-32k-0314, gpt-3.5-turbo, gpt-3.5-turbo-0301, text-davinci-003, text-davinci-002, code-davinci-002
-      OPENAI_API_MODEL: xxxx
+      OPENAI_API_MODEL: xxx
       # 反向代理，可选
       API_REVERSE_PROXY: xxx
       # 访问权限密钥，可选
@@ -201,13 +226,11 @@ services:
       # 超时，单位毫秒，可选
       TIMEOUT_MS: 60000
       # Socks代理，可选，和 SOCKS_PROXY_PORT 一起时生效
-      SOCKS_PROXY_HOST: xxxx
+      SOCKS_PROXY_HOST: xxx
       # Socks代理端口，可选，和 SOCKS_PROXY_HOST 一起时生效
-      SOCKS_PROXY_PORT: xxxx
+      SOCKS_PROXY_PORT: xxx
       # HTTPS 代理，可选，支持 http，https，socks5
-      HTTPS_PROXY: xxxx
-      # 全部 代理，可选，支持 http，https，socks5
-      ALL_PROXY: xxxx
+      HTTPS_PROXY: http://xxx:7890
 ```
 - `OPENAI_API_BASE_URL`  可选，设置 `OPENAI_API_KEY` 时可用
 - `OPENAI_API_MODEL`  可选，设置 `OPENAI_API_KEY` 时可用
@@ -230,6 +253,8 @@ services:
 | `API_REVERSE_PROXY`   | 可选，`Web API` 时可用 | `Web API` 反向代理地址 [详情](https://github.com/transitive-bullshit/chatgpt-api#reverse-proxy)    |
 | `SOCKS_PROXY_HOST`   | 可选，和 `SOCKS_PROXY_PORT` 一起时生效 | Socks代理    |
 | `SOCKS_PROXY_PORT`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理端口    |
+| `SOCKS_PROXY_USERNAME`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理用户名    |
+| `SOCKS_PROXY_PASSWORD`   | 可选，和 `SOCKS_PROXY_HOST` 一起时生效 | Socks代理密码    |
 | `HTTPS_PROXY`   | 可选 | HTTPS 代理，支持 http，https, socks5    |
 | `ALL_PROXY`   | 可选 | 所有代理 代理，支持 http，https, socks5    |
 
@@ -256,7 +281,7 @@ PS: 不进行打包，直接在服务器上运行 `pnpm start` 也可
 
 #### 前端网页
 
-1、修改根目录下 `.env` 内 `VITE_APP_API_BASE_URL` 为你的实际后端接口地址
+1、修改根目录下 `.env` 文件中的 `VITE_GLOB_API_URL` 为你的实际后端接口地址
 
 2、根目录下运行以下命令，然后将 `dist` 文件夹内的文件复制到你网站服务的根目录下
 
@@ -282,10 +307,6 @@ A: `vscode` 请安装项目推荐插件，或手动安装 `Eslint` 插件。
 Q: 前端没有打字机效果？
 
 A: 一种可能原因是经过 Nginx 反向代理，开启了 buffer，则 Nginx 会尝试从后端缓冲一定大小的数据再发送给浏览器。请尝试在反代参数后添加 `proxy_buffering off;`，然后重载 Nginx。其他 web server 配置同理。
-
-Q: 内容返回不完整？
-
-A: 接口每次返回的内容是有长度限制的，可以修改根目录下`.env`文件中的`VITE_GLOB_OPEN_LONG_REPLY`字段，将其设置为`true`，重新编译前端即可开启长回复功能，即可返回全部的内容。需要注意的是，使用此功能可能带来较多的API使用费用。
 
 ## 参与贡献
 
