@@ -17,7 +17,7 @@ export function defaultSetting(): UserState {
     userInfo: {
       avatar: 'https://raw.githubusercontent.com/jason6111/gpt-web/main/src/assets/avatar.jpg',
       name: 'ByJason',
-      description: 'Star on <a href="https://github.com/jason6111/gpt-web" class="text-blue-500" target="_blank" >Github</a>',
+      description: 'Star on <a href="https://github.com/jason6111/gpt-web" class="text-blue-500" target="_blank" >GitHub</a>',
     },
   }
 }
